@@ -1,0 +1,32 @@
+body{
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+#gameboard{
+    width: 600px;
+    height: 600px;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+}
+.board-cell{
+    position: relative;
+    box-shadow: 
+    3px 0 0 0 black,  
+    3px 0 0 0 black inset, 
+    0 3px 0 0 black inset,
+    0 3px 0 0 black ;
+    transition: 0.5s;
+}
+.board-cell:hover{
+    background-color: #888;
+    cursor:pointer;
+}
+img{
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%,-50%);
+}
+
