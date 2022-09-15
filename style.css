@@ -1,8 +1,57 @@
+@import url('https://fonts.googleapis.com/css2?family=Mukta:wght@300&display=swap');
+*{
+    margin: 0;
+    padding: 0;
+    font-family: 'Mukta', sans-serif;
+    font-weight: 600;
+}
 body{
+    background-color: #9a7db5;
     height: 100vh;
+}
+main{
+    width: 100%;
+    height: 100%;
     display: flex;
     align-items: center;
-    justify-content: center;
+    justify-content: space-evenly;
+}
+form{
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-evenly;
+    height: 300px;
+    width: 250px;
+    background-color: #e0f0ea;
+    border: 2px solid #3c2a4d;
+    box-shadow: 2px 3px 0 0 #3c2a4d;
+    font-size: larger;
+}
+form div{
+    color: #271b31;
+    text-align: center;
+}
+input{
+    width: 70%;
+    border: 2px solid #271b31;
+}
+button{
+    width: 70px;
+    background-color: #e0f0ea;
+    height: 30px;
+    font-size: 15px;
+    transition: 0.5s;
+    border: 2px solid #271b31;
+}
+button:hover{
+    cursor: pointer;
+    width: 80px;
+    height: 32px;
+    background-color: #503a65;
+    color: #e0f0ea;
+    box-shadow: 2px 2px 0 0 #271b31;
 }
 #gameboard{
     width: 600px;
@@ -13,14 +62,14 @@ body{
 .board-cell{
     position: relative;
     box-shadow: 
-    3px 0 0 0 black,  
-    3px 0 0 0 black inset, 
-    0 3px 0 0 black inset,
-    0 3px 0 0 black ;
+    3px 0 0 0 #3c2a4d,  
+    3px 0 0 0 #3c2a4d inset, 
+    0 3px 0 0 #3c2a4d inset,
+    0 3px 0 0 #3c2a4d ;
     transition: 0.5s;
 }
 .board-cell:hover{
-    background-color: #888;
+    background-color: #3c2a4d;
     cursor:pointer;
 }
 img{
