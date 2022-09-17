@@ -108,4 +108,17 @@ img{
         right: 100vw;
     }
 }
-
+#canvas{
+    width: 216px;
+    height: 144px;
+}
+.playerStats{
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    color: #1f1329;
+}
+#canvas2{
+    width: 216px;
+    height: 144px;
+}

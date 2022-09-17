@@ -2,6 +2,104 @@ const boardCell = document.getElementsByClassName('board-cell')
 const form = document.getElementById('form')
 const gameboard = document.getElementById('gameboard')
 const playerInput = document.getElementById('playerInput')
+const canvas = document.getElementById('canvas')
+const ctx = canvas.getContext('2d')
+const canvas2 = document.getElementById('canvas2')
+const ctx2 = canvas2.getContext('2d')
+const canvas_width = canvas.width = 216
+const canvas_height = canvas.height = 144
+const canvas_width2 = canvas2.width = 216
+const canvas_height2 = canvas2.height = 144
+
+const playerImage1 = new Image();
+playerImage1.src = 'character.png'
+
+const playerImage2 = new Image();
+playerImage2.src = 'character2.png'
+
+const sprite_width = 72
+const sprite_height = 48
+
+let gameFrame = 0;
+let gameFrame2 = 0;
+let slowFrames = 15;
+
+let player1Action = 'stand'
+let player2Action = 'stand'
+
+const spriteAnimations = [];
+const animationStates = [
+    {
+        name: 'walk',
+        frames: 6
+    },
+    {
+        name: 'stand',
+        frames: 4
+    },
+    {
+        name: 'jump',
+        frames: 3
+    },
+    {
+        name: 'attack',
+        frames: 4
+    },
+    {
+        name: 'defense',
+        frames: 4
+    },
+    {
+        name: 'damage',
+        frames: 3
+    },
+    {
+        name: 'death',
+        frames: 5
+    },
+    {
+        name: 'wavesign',
+        frames: 6
+    }
+]
+
+animationStates.forEach((state, index) => {
+    let frames = {
+        loc: []
+    }
+    for(let i = 0; i < state.frames; i++){
+        let positionX = i*sprite_width;
+        let positionY = index*sprite_height;
+        frames.loc.push({x: positionX, y: positionY})
+    }
+    spriteAnimations[state.name] = frames
+});
+
+
+function animate(action){
+    ctx.clearRect(0,0, canvas_width, canvas_height)
+    let position = Math.floor(gameFrame/slowFrames) % spriteAnimations[player1Action].loc.length;
+    let frameX = sprite_width*position;
+    let frameY = spriteAnimations[player1Action].loc[position].y
+    ctx.drawImage(playerImage1, frameX, frameY, sprite_width, sprite_height, 0, 0, 3*sprite_width, 3*sprite_height)
+    
+    gameFrame++
+    requestAnimationFrame(animate)
+}
+
+function animate2(){
+    ctx2.clearRect(0,0, canvas_width2, canvas_height2)
+    let position = Math.floor(gameFrame2/slowFrames) % spriteAnimations[player2Action].loc.length;
+    let frameX = sprite_width*position;
+    let frameY = spriteAnimations[player2Action].loc[position].y
+    ctx2.drawImage(playerImage2, frameX, frameY, sprite_width, sprite_height, 0, 0, 3*sprite_width, 3*sprite_height)
+    
+    gameFrame2++
+    requestAnimationFrame(animate2)
+}
+animate()
+animate2()
+
 
 form.addEventListener('click', e => {
     e.preventDefault();
@@ -104,6 +202,7 @@ function checkEndGame(player){
 }
 
 function playRound(boardCellClicked) {
+    let winner;
     let index = getGameboardIndex(boardCellClicked)
     let evaluatedPlay = evaluatePlay(index)
     if(evaluatedPlay == false){
@@ -114,6 +213,9 @@ function playRound(boardCellClicked) {
     gameboardStats[index[0]][index[1]] = playerTurn
     console.log(gameboardStats)
     checkEndGame(playerTurn)
+    if(gameOn == false){
+        winner = playerTurn;
+    }
 }
 
 function createPlayer(name) {
