@@ -58,7 +58,9 @@ button:hover{
     height: 600px;
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
+    transition: 3s;
 }
+
 .board-cell{
     position: relative;
     box-shadow: 
@@ -77,5 +79,33 @@ img{
     left: 50%;
     top: 50%;
     transform: translate(-50%,-50%);
+}
+.animationGameboard{
+    animation-name: gameboardAnimation;
+    animation-duration: 5s;
+    animation-fill-mode: forwards;
+    animation-timing-function: ease-in;
+}
+@keyframes gameboardAnimation{
+    10%{
+        opacity: 0;
+    }
+    100%{
+        opacity: 1;
+    }
+}
+.animationForm{
+    animation-name: formAnimation;
+    animation-duration: 2s;
+    animation-fill-mode: forwards;
+    animation-timing-function: ease-in;
+}
+@keyframes formAnimation {
+    0%{
+        right: 0;
+    }
+    100%{
+        right: 100vw;
+    }
 }
 
