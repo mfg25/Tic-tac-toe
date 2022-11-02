@@ -86,6 +86,7 @@ function animate(action){
     }else{
         requestAnimationFrame(animate)
     }
+    
 }
 
 function animate2(){
@@ -99,15 +100,14 @@ function animate2(){
     if(player2Action == 'damage' && position == 2){ player2Action = 'stand'; slowFrames = 15}
     gameFrame2++
     if(player2Action == 'death' && position == 4){
+        
     }else{
         requestAnimationFrame(animate2)
     }
     console.log(player2Action)
 }
-
 animate()
 animate2()
-
 
 button.addEventListener('click', e => {
     e.preventDefault();
@@ -132,6 +132,7 @@ buttonNewGame.addEventListener('click', e =>{
     Array.from(boardCell).forEach(element => {
         element.innerHTML = '';
     });
+    if(player1.showCounter() == 3 || player2.showCounter() == 3) resetGame();
     gameOn = true;
     gameboardStats = [
         [,,,],
@@ -143,6 +144,7 @@ buttonNewGame.addEventListener('click', e =>{
 
 let gameOn = false;
 let playerSelector = 'X'
+let playCounter = 0;
 let gameboardStats = [
     [,,,],
     [,,,],
@@ -154,7 +156,6 @@ let player2;
 
 function addMusic(){
     audio.setAttribute('src', 'backgroundMusic.mp3')
-
 }
 
 function createGame(namePlayer1, namePlayer2) {
@@ -163,6 +164,16 @@ function createGame(namePlayer1, namePlayer2) {
     player2 = createPlayer(namePlayer2)
     getPlayer2Name.innerText = namePlayer2;
     gameOn = true;
+}
+
+function resetGame(){
+    player1Action = 'stand'
+    player2Action = 'stand'
+    if(player1.showCounter() == 3) animate2()
+    if(player2.showCounter() == 3) animate()
+    player1.resetCounter();
+    player2.resetCounter();
+    scoreBoard.innerText = `${player1.showCounter()} x ${player2.showCounter()}`
 }
 
 function moveBoard(){
@@ -226,6 +237,7 @@ function getGameboardIndex(boardCellClicked){
 }
 
 function checkEndRound(player){
+    playCounter++;
     if(gameboardStats[0][0] == player && gameboardStats[0][1] == player && gameboardStats[0][2] == player) gameOn = false;
     else if(gameboardStats[1][0] == player && gameboardStats[1][1] == player && gameboardStats[1][2] == player) gameOn = false;
     else if(gameboardStats[2][0] == player && gameboardStats[2][1] == player && gameboardStats[2][2] == player) gameOn = false;
@@ -234,6 +246,14 @@ function checkEndRound(player){
     else if(gameboardStats[0][2] == player && gameboardStats[1][2] == player && gameboardStats[2][2] == player) gameOn = false;
     else if(gameboardStats[0][0] == player && gameboardStats[1][1] == player && gameboardStats[2][2] == player) gameOn = false;
     else if(gameboardStats[0][2] == player && gameboardStats[1][1] == player && gameboardStats[2][0] == player) gameOn = false;
+    console.log(playCounter)
+    if(playCounter == 9 && gameOn == true){
+        gameOn = false
+        return true //draw
+    }else{
+        return false
+    }
+
 }
 
 function playRound(boardCellClicked) {
@@ -247,8 +267,13 @@ function playRound(boardCellClicked) {
     showIconsOnTheBoard(playerTurn, boardCellClicked)
     gameboardStats[index[0]][index[1]] = playerTurn
     
-    checkEndRound(playerTurn)
-    if(gameOn == false){
+    let draw = checkEndRound(playerTurn)
+    console.log(draw)
+    if(gameOn == false && draw == true){
+        winner = 'draw'
+        endRound(winner);
+    }
+    else if(gameOn == false){
         winner = playerTurn;
         endRound(winner);
     }
@@ -256,11 +281,13 @@ function playRound(boardCellClicked) {
 }
 
 function checkEndGame(){
-    gameFrame2 = 0
-    gameFrame = 0
     if(player1.showCounter() == 3){
+        gameFrame2 = 0
+        gameFrame = 0
         player2Action = 'death'
     }else if(player2.showCounter() == 3){
+        gameFrame2 = 0
+        gameFrame = 0
         player1Action = 'death'
     }
 }
@@ -272,12 +299,13 @@ function endRound(winner){
         gameFrame2 = 0
         player1Action = 'attack'
         player2Action = 'damage'
-    }else {
+    }else if(winner == 'X'){
         gameFrame2 = 0
         gameFrame = 0
         player1Action = 'damage'
         player2Action = 'attack'
     }
+    playCounter = 0;
     buttonNewGame.style.visibility = 'visible'
     incrementScore(winner)
 }
@@ -285,7 +313,7 @@ function endRound(winner){
 function incrementScore(winner){
     if(winner == 'O'){
         player1.incrementCounter()
-    }else{
+    }else if(winner == 'X'){
         player2.incrementCounter()
     }
     scoreBoard.innerText = `${player1.showCounter()} x ${player2.showCounter()}`
