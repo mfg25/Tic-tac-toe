@@ -253,7 +253,6 @@ function checkEndRound(player){
     }else{
         return false
     }
-
 }
 
 function playRound(boardCellClicked) {
@@ -292,6 +291,13 @@ function checkEndGame(){
     }
 }
 
+function playSoundEffect(){
+    let audio = document.createElement('audio')
+    audio.src = 'hitSound.mp3'
+    audio.volume = 0.2
+    audio.play()
+}
+
 function endRound(winner){
     
     if(winner == 'O'){
@@ -305,6 +311,7 @@ function endRound(winner){
         player1Action = 'damage'
         player2Action = 'attack'
     }
+    playSoundEffect();
     playCounter = 0;
     buttonNewGame.style.visibility = 'visible'
     incrementScore(winner)
