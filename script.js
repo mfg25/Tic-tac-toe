@@ -1,5 +1,5 @@
 const boardCell = document.getElementsByClassName('board-cell')
-const form = document.getElementById('form')
+const button = document.getElementById('button')
 const gameboard = document.getElementById('gameboard')
 const playerInput = document.getElementById('playerInput')
 const canvas = document.getElementById('canvas')
@@ -10,12 +10,21 @@ const canvas_width = canvas.width = 216
 const canvas_height = canvas.height = 144
 const canvas_width2 = canvas2.width = 216
 const canvas_height2 = canvas2.height = 144
+const getPlayer1Name = document.getElementById("viewPlayer1Name")
+const getPlayer2Name = document.getElementById("viewPlayer2Name")
+const buttonNewGame = document.getElementById("buttonNewGame")
+const scoreBoard = document.getElementById('score')
+const playerStatsDiv1 = document.getElementById('p1')
+const playerStatsDiv2 = document.getElementById('p2')
+const audio = document.getElementById('audio')
+audio.volume = 0.1
+
 
 const playerImage1 = new Image();
-playerImage1.src = 'character.png'
+playerImage1.src = 'character11.png'
 
 const playerImage2 = new Image();
-playerImage2.src = 'character2.png'
+playerImage2.src = 'character22.png'
 
 const sprite_width = 72
 const sprite_height = 48
@@ -30,23 +39,11 @@ let player2Action = 'stand'
 const spriteAnimations = [];
 const animationStates = [
     {
-        name: 'walk',
-        frames: 6
-    },
-    {
         name: 'stand',
         frames: 4
     },
     {
-        name: 'jump',
-        frames: 3
-    },
-    {
         name: 'attack',
-        frames: 4
-    },
-    {
-        name: 'defense',
         frames: 4
     },
     {
@@ -57,10 +54,7 @@ const animationStates = [
         name: 'death',
         frames: 5
     },
-    {
-        name: 'wavesign',
-        frames: 6
-    }
+    
 ]
 
 animationStates.forEach((state, index) => {
@@ -77,45 +71,75 @@ animationStates.forEach((state, index) => {
 
 
 function animate(action){
+    if(player1Action == 'damage')slowFrames = 23
     ctx.clearRect(0,0, canvas_width, canvas_height)
+    
     let position = Math.floor(gameFrame/slowFrames) % spriteAnimations[player1Action].loc.length;
+    
     let frameX = sprite_width*position;
     let frameY = spriteAnimations[player1Action].loc[position].y
     ctx.drawImage(playerImage1, frameX, frameY, sprite_width, sprite_height, 0, 0, 3*sprite_width, 3*sprite_height)
-    
+    if(player1Action == 'attack' && position == 3)player1Action = 'stand';
+    if(player1Action == 'damage' && position == 2){player1Action = 'stand';slowFrames = 15}
     gameFrame++
-    requestAnimationFrame(animate)
+    if(player1Action == 'death' && position == 4){
+    }else{
+        requestAnimationFrame(animate)
+    }
 }
 
 function animate2(){
+    if(player2Action == 'damage')slowFrames = 23
     ctx2.clearRect(0,0, canvas_width2, canvas_height2)
     let position = Math.floor(gameFrame2/slowFrames) % spriteAnimations[player2Action].loc.length;
     let frameX = sprite_width*position;
     let frameY = spriteAnimations[player2Action].loc[position].y
-    ctx2.drawImage(playerImage2, frameX, frameY, sprite_width, sprite_height, 0, 0, 3*sprite_width, 3*sprite_height)
-    
+    ctx2.drawImage(playerImage2, frameX, frameY, sprite_width, sprite_height, -15, 10, 3*sprite_width, 3*sprite_height)
+    if(player2Action == 'attack' && position == 3) player2Action = 'stand'
+    if(player2Action == 'damage' && position == 2){ player2Action = 'stand'; slowFrames = 15}
     gameFrame2++
-    requestAnimationFrame(animate2)
+    if(player2Action == 'death' && position == 4){
+    }else{
+        requestAnimationFrame(animate2)
+    }
+    console.log(player2Action)
 }
+
 animate()
 animate2()
 
 
-form.addEventListener('click', e => {
+button.addEventListener('click', e => {
     e.preventDefault();
     createGame(player1Name.value, player2Name.value);
     removeForm()
     moveBoard()
+    addMusic()
 })
 
+
 Array.from(boardCell).forEach(element => {
+
     element.dataset.index = Array.from(boardCell).indexOf(element);
     element.addEventListener('click', e => {
         receiveDataFromPlay(element.dataset.index)
     })
-    
-
 });
+
+buttonNewGame.addEventListener('click', e =>{
+    e.preventDefault();
+    buttonNewGame.style.visibility = 'hidden'
+    Array.from(boardCell).forEach(element => {
+        element.innerHTML = '';
+    });
+    gameOn = true;
+    gameboardStats = [
+        [,,,],
+        [,,,],
+        [,,,]
+    ]
+    
+})
 
 let gameOn = false;
 let playerSelector = 'X'
@@ -123,17 +147,29 @@ let gameboardStats = [
     [,,,],
     [,,,],
     [,,,]
-]
-console.log(gameboardStats)
+];
+
+let player1;
+let player2;
+
+function addMusic(){
+    audio.setAttribute('src', 'backgroundMusic.mp3')
+
+}
 
 function createGame(namePlayer1, namePlayer2) {
-    let player1 = createPlayer(namePlayer1)
-    let player2 = createPlayer(namePlayer2)
+    player1 = createPlayer(namePlayer1)
+    getPlayer1Name.innerText = namePlayer1;
+    player2 = createPlayer(namePlayer2)
+    getPlayer2Name.innerText = namePlayer2;
     gameOn = true;
 }
 
 function moveBoard(){
     gameboard.className = 'animationGameboard'
+    playerStatsDiv1.classList.add('animationGameboard')
+    playerStatsDiv2.classList.add('animationGameboard')
+    scoreBoard.classList.add('animationGameboard')
 }
 
 function removeForm(){
@@ -145,11 +181,10 @@ function removeForm(){
 
 function receiveDataFromPlay(boardCellClicked) {
     if (gameOn == true) playRound(boardCellClicked)
-    console.log(gameOn)
 }
 
 function showIconsOnTheBoard(player, boardCellClicked) {
-    console.log(player)
+   
     Array.from(boardCell).forEach(element => {
         if(element.dataset.index == boardCellClicked){
             if(player == 'O'){
@@ -190,7 +225,7 @@ function getGameboardIndex(boardCellClicked){
     else return [2,2]
 }
 
-function checkEndGame(player){
+function checkEndRound(player){
     if(gameboardStats[0][0] == player && gameboardStats[0][1] == player && gameboardStats[0][2] == player) gameOn = false;
     else if(gameboardStats[1][0] == player && gameboardStats[1][1] == player && gameboardStats[1][2] == player) gameOn = false;
     else if(gameboardStats[2][0] == player && gameboardStats[2][1] == player && gameboardStats[2][2] == player) gameOn = false;
@@ -211,11 +246,49 @@ function playRound(boardCellClicked) {
     let playerTurn = playersTurn(boardCellClicked)
     showIconsOnTheBoard(playerTurn, boardCellClicked)
     gameboardStats[index[0]][index[1]] = playerTurn
-    console.log(gameboardStats)
-    checkEndGame(playerTurn)
+    
+    checkEndRound(playerTurn)
     if(gameOn == false){
         winner = playerTurn;
+        endRound(winner);
     }
+    checkEndGame();
+}
+
+function checkEndGame(){
+    gameFrame2 = 0
+    gameFrame = 0
+    if(player1.showCounter() == 3){
+        player2Action = 'death'
+    }else if(player2.showCounter() == 3){
+        player1Action = 'death'
+    }
+}
+
+function endRound(winner){
+    
+    if(winner == 'O'){
+        gameFrame = 0
+        gameFrame2 = 0
+        player1Action = 'attack'
+        player2Action = 'damage'
+    }else {
+        gameFrame2 = 0
+        gameFrame = 0
+        player1Action = 'damage'
+        player2Action = 'attack'
+    }
+    buttonNewGame.style.visibility = 'visible'
+    incrementScore(winner)
+}
+
+function incrementScore(winner){
+    if(winner == 'O'){
+        player1.incrementCounter()
+    }else{
+        player2.incrementCounter()
+    }
+    scoreBoard.innerText = `${player1.showCounter()} x ${player2.showCounter()}`
 }
 
 function createPlayer(name) {
@@ -224,5 +297,7 @@ function createPlayer(name) {
         name,
         incrementCounter: () => counter++,
         resetCounter: () => counter = 0,
+        showCounter: () => counter,
     }
 }
+

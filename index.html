@@ -10,8 +10,8 @@
     <link rel="stylesheet" href="style.css" />
   </head>
   <body>
+    <audio id="audio" src="" autoplay="true" hidden="true"></audio>
     <main>
-      <!--
       <div id="playerInput">
         <form action="" id="form">
           <div>
@@ -32,27 +32,36 @@
               value="player2"
             />
           </div>
-          <button type="submit">PLAY</button>
+          <button type="submit" class="button" id="button">PLAY</button>
         </form>
-      </div>-->
-      <div class="playerStats">
+      </div>
+
+      <div class="playerStats" id="p1">
         <canvas id="canvas"> </canvas>
-        <h1>PLAYER 1</h1>
+        <h1 id="viewPlayer1Name">PLAYER 1</h1>
       </div>
-      <div id="gameboard">
-        <div class="board-cell"></div>
-        <div class="board-cell"></div>
-        <div class="board-cell"></div>
-        <div class="board-cell"></div>
-        <div class="board-cell"></div>
-        <div class="board-cell"></div>
-        <div class="board-cell"></div>
-        <div class="board-cell"></div>
-        <div class="board-cell"></div>
+
+      <div id="gameboardAndScore">
+        <button type="submit" class="button" id="buttonNewGame">
+          NEW GAME
+        </button>
+        <div id="gameboard">
+          <div class="board-cell"></div>
+          <div class="board-cell"></div>
+          <div class="board-cell"></div>
+          <div class="board-cell"></div>
+          <div class="board-cell"></div>
+          <div class="board-cell"></div>
+          <div class="board-cell"></div>
+          <div class="board-cell"></div>
+          <div class="board-cell"></div>
+        </div>
+        <div><h1 id="score">0 x 0</h1></div>
       </div>
-      <div class="playerStats">
-        <canvas id="canvas2"> </canvas>
-        <h1>PLAYER 1</h1>
+
+      <div class="playerStats" id="p2">
+        <canvas id="canvas2"></canvas>
+        <h1 id="viewPlayer2Name">PLAYER 2</h1>
       </div>
     </main>
   </body>
