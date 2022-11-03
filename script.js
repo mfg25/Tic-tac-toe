@@ -305,13 +305,15 @@ function endRound(winner){
         gameFrame2 = 0
         player1Action = 'attack'
         player2Action = 'damage'
+        playSoundEffect();
     }else if(winner == 'X'){
         gameFrame2 = 0
         gameFrame = 0
         player1Action = 'damage'
         player2Action = 'attack'
+        playSoundEffect();
     }
-    playSoundEffect();
+   
     playCounter = 0;
     buttonNewGame.style.visibility = 'visible'
     incrementScore(winner)
